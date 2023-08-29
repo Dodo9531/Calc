@@ -2,7 +2,10 @@ import Exceptions.ExpressionFormatException;
 import Exceptions.NumberValuesException;
 
 import java.util.Scanner;
+enum Rome_digits{
 
+    I,V,X,L,C
+}
 public class Main {
     public Main() {
     }
@@ -84,20 +87,46 @@ public class Main {
 
     private static int RomeToArabic(String Rome_number) {
         int Arabic_number = 0;
-
+        int counter = 0;
+        char[] Rome_number_char_arr = Rome_number.toCharArray();
+        for (int i =0;i<Rome_number.length();i++)
+        {
+            if(Rome_number.equals("II")||Rome_number.equals("III"))
+                break;
+            if(Rome_number_char_arr[i]=='V'||Rome_number_char_arr[i]=='X')
+                break;
+            if(Rome_number_char_arr[i] == 'I' && Rome_number_char_arr[i+1] =='I')
+                throw new NumberValuesException("Wrong rome number");
+        }
         while(!Rome_number.isEmpty()) {
             switch (Rome_number.substring(Rome_number.length() - 1)) {
                 case "I":
+                    if(counter == 5)
+                    {
+                        Arabic_number =4;
+                        Rome_number = Rome_number.substring(0, Rome_number.length() - 1);
+                        break;
+                    }
+                    if(counter == 10)
+                    {
+                        Arabic_number =9;
+                        Rome_number = Rome_number.substring(0, Rome_number.length() - 1);
+                        break;
+                    }
                     ++Arabic_number;
                     Rome_number = Rome_number.substring(0, Rome_number.length() - 1);
+                    counter = 1;
                     break;
                 case "V":
                     Arabic_number += 5;
                     Rome_number = Rome_number.substring(0, Rome_number.length() - 1);
+                    counter = 5;
                     break;
                 case "X":
+
                     Arabic_number += 10;
                     Rome_number = Rome_number.substring(0, Rome_number.length() - 1);
+                    counter = 10;
                     break;
                 default:
                     throw new NumberValuesException("This isn't rome number");
@@ -136,7 +165,23 @@ public class Main {
                 --Arabic_number;
             }
         }
+        char[] Rome_number_char_arr = Rome_number.toCharArray();
+        if(Rome_number.length()==4) {
+            if (Rome_number_char_arr[0] == Rome_number_char_arr[1] && Rome_number_char_arr[0] == Rome_number_char_arr[2] && Rome_number_char_arr[0] == Rome_number_char_arr[3]) {
+             Rome_number=Rome_number.substring(1, 2);
 
+                if (Rome_number_char_arr[0] == 'I')
+                    Rome_number += "V";
+                if (Rome_number_char_arr[0] == 'X')
+                    Rome_number += "L";
+            }
+        }
+        if(Rome_number.length()==5)
+            if(Rome_number_char_arr[1]=='X' && Rome_number_char_arr[2]=='X' && Rome_number_char_arr[3]=='X' && Rome_number_char_arr[4]=='X')
+            {
+                Rome_number=Rome_number.substring(2,3);
+                Rome_number+="C";
+            }
         return Rome_number;
     }  // Перевод арабских чисел в римские
 
